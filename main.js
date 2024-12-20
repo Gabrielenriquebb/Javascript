@@ -28,18 +28,70 @@ los jugadores podran dialogar mediante el dia y en caso de haber asesinatos se l
 
 */
 
-function bienvenida(nombre) {
-    if (nombre === null) {
-        alert("Se cancela la partida por falta de jugadores");
-        return;
-    } else {
-        alert("Bienvenido jugador " + nombre);
-    }
+
+
+
+function bienvenida() {
+    const identificar = true;
+    let intentos = 1;
+
+    const personajes = [
+        { nombre: "Javier", rol: "ASESINO" },
+        { nombre: "Gimenez", rol: "INOCENTE" },
+        { nombre: "Alonso", rol: "INOCENTE" },
+        { nombre: "Joaquin", rol: "INOCENTE" },
+        { nombre: "Fabricio", rol: "SHERIFF" },
+        { nombre: "Dextre", rol: "VIGILANTE" },
+    ];
+
+    do {
+        alert("Los personajes a elegir son los siguientes: Javier, Gimenez, Alonso, Joaquin, Fabricio y Dextre");
+
+        const usuario = prompt("Ingresa tu nombre de usuario");
+
+        if (!usuario) {
+            alert("No se reconoció el usuario");
+            intentos++;
+            if (intentos > 3) {
+                alert("Se superó el límite de 3 intentos, vuelve a intentarlo más tarde");
+                console.error("Se superó el límite de intentos");
+                break;
+            }
+            continue;
+        }
+
+        const personajeEncontrado = personajes.filter(
+            (personaje) => personaje.nombre.toLowerCase() === usuario.toLowerCase()
+        );
+
+        if (personajeEncontrado.length > 0) {
+            const personaje = personajeEncontrado[0];
+            alert(`Bienvenido, ${personaje.nombre}`);
+            alert(`Te ha tocado ser: ${personaje.rol}`);
+            if (personaje.rol === "ASESINO") {
+                const asesino = prompt("A quién MATARÁS esta noche: Gimenez, Joaquin, Alonso, Dextre o Fabricio");
+                if (asesino) {
+                    alert(`Decidiste acabar con la vida de ${asesino.toUpperCase()} mientras dormía.`);
+                    alert("Regresas a casa...");
+                    alert("Se hace de día...");
+                }
+            } else if (personaje.rol === "INOCENTE") {
+                alert("Tu objetivo es mediante votaciones echar al asesino del pueblo.");
+            } else if (personaje.rol === "SHERIFF") {
+                alert("Tu objetivo es MATAR al asesino. En caso de fallar, abstente a las consecuencias.");
+            } else if (personaje.rol === "VIGILANTE") {
+                const vigilar = prompt("A quién vigilarás esta noche: Alonso, Javier, Gimenez, Joaquin o Fabricio");
+                if (vigilar) {
+                    alert(`Estás vigilando a ${vigilar.toUpperCase()}...`);
+                } else {
+                    alert("Parece que decidiste no vigilar a nadie esta noche.");
+                }
+            }
+        } else {
+            alert("El usuario no coincide con ningún personaje. Intenta nuevamente.");
+            intentos++;
+        }
+    } while (identificar);
 }
 
-function nombreElegido() {
-    let nombreDelJugador = prompt("Por favor, ingrese su nombre");
-    bienvenida(nombreDelJugador);
-}
-
-nombreElegido();
+bienvenida();
